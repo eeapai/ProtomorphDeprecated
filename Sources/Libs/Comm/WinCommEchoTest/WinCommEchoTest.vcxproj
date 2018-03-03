@@ -193,7 +193,6 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="ReadMe.txt" />
     <None Include="res\WinCommEchoTest.ico" />
     <None Include="res\WinCommEchoTest.rc2" />
   </ItemGroup>
