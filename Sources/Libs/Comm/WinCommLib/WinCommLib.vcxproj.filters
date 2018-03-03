@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="WinUSB">
+      <UniqueIdentifier>{ae15e800-917a-41e4-9a60-7c102d1c7fe1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="WinSock">
+      <UniqueIdentifier>{a680c765-5e72-4717-8e14-72079999cad6}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinUSB\SetupAPIWrapper.h">
+      <Filter>WinUSB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinUSB\WinUSBComm2Shared.h">
+      <Filter>WinUSB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinUSB\WinUSBCommShared.h">
+      <Filter>WinUSB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinUSB\WinUSBWrapper.h">
+      <Filter>WinUSB</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinSock\WinSockWrapper.h">
+      <Filter>WinSock</Filter>
+    </ClInclude>
+    <ClInclude Include="..\WinUSB\WinUSBCommDeviceImpl.h">
+      <Filter>WinUSB</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WinUSB\SetupAPIWrapper.cpp">
+      <Filter>WinUSB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WinUSB\WinUSBWrapper.cpp">
+      <Filter>WinUSB</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WinSock\WinSockWrapper.cpp">
+      <Filter>WinSock</Filter>
+    </ClCompile>
+    <ClCompile Include="..\WinUSB\WinUSBCommDeviceImpl.cpp">
+      <Filter>WinUSB</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
