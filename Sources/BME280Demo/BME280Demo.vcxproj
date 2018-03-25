@@ -90,7 +90,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Libs\BME280\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Drivers\BME280\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -105,7 +105,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Libs\BME280\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Drivers\BME280\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -122,7 +122,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Libs\BME280\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Drivers\BME280\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -141,7 +141,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Libs\BME280\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\Libs\Comm\Common\;$(ProjectDir)..\Libs\Comm\WinComm\;$(ProjectDir)..\Libs\HAL\;$(ProjectDir)..\Drivers\BME280\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,14 +151,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Libs\BME280\BME280.h" />
+    <ClInclude Include="..\Drivers\BME280\BME280.h" />
     <ClInclude Include="..\Libs\Comm\Common\ICommDevice.h" />
     <ClInclude Include="..\Libs\Comm\WinComm\WinCommFactory.h" />
     <ClInclude Include="..\Libs\HAL\HAL_IO32.h" />
     <ClInclude Include="..\Libs\HAL\HAL_IO32ICommProxy.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Libs\BME280\BME280.cpp" />
+    <ClCompile Include="..\Drivers\BME280\BME280.cpp" />
     <ClCompile Include="..\Libs\Comm\WinComm\WinCommFactory.cpp" />
     <ClCompile Include="..\Libs\HAL\HAL_IO32ICommProxy.cpp" />
     <ClCompile Include="BME280Demo.cpp" />

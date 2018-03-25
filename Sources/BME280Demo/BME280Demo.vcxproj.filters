@@ -22,14 +22,14 @@
     <ClInclude Include="..\Libs\Comm\Common\ICommDevice.h">
       <Filter>Comm</Filter>
     </ClInclude>
-    <ClInclude Include="..\Libs\BME280\BME280.h">
-      <Filter>BME280</Filter>
-    </ClInclude>
     <ClInclude Include="..\Libs\HAL\HAL_IO32ICommProxy.h">
       <Filter>HAL</Filter>
     </ClInclude>
     <ClInclude Include="..\Libs\HAL\HAL_IO32.h">
       <Filter>HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Drivers\BME280\BME280.h">
+      <Filter>BME280</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -39,11 +39,11 @@
     <ClCompile Include="..\Libs\Comm\WinComm\WinCommFactory.cpp">
       <Filter>Comm</Filter>
     </ClCompile>
-    <ClCompile Include="..\Libs\BME280\BME280.cpp">
-      <Filter>BME280</Filter>
-    </ClCompile>
     <ClCompile Include="..\Libs\HAL\HAL_IO32ICommProxy.cpp">
       <Filter>HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Drivers\BME280\BME280.cpp">
+      <Filter>BME280</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
