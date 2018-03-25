@@ -1,0 +1,4 @@
+For 40960x8 bits needed 983043 pin actions in 4354ms which is cca. 75kHz not cached return
+                                              2745ms - 3050ms     120kHz - 107kHz cached and no return 
+											  3545ms               92KHz  not cached no return
+											  3000ms - 4008ms     110kHz - 80kHz cached return

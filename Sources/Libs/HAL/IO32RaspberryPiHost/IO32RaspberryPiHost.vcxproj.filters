@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\..\Comm\LinuxSocket\LinuxSocketWrapper.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HAL_IO32LinuxImpl.cpp">
+      <Filter>HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="Test.cpp" />
+    <ClCompile Include="..\HAL_IO32ImplBase.cpp">
+      <Filter>HAL</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HAL_IO32ICommHost.cpp">
+      <Filter>HAL</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\HAL_IO32.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Comm\LinuxSocket\LinuxSocketWrapper.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HAL_IO32LinuxImpl.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HAL_IO32ImplBase.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Comm\Common\ICommDevice.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\HAL_IO32ICommHost.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="HAL">
+      <UniqueIdentifier>{1cc41536-a854-460f-ae64-e0e0e5bdb266}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Comm">
+      <UniqueIdentifier>{9ac54712-d7e9-42e6-b623-b934e014b77d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

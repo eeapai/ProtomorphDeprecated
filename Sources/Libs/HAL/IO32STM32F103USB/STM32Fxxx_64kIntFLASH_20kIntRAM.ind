@@ -1,0 +1,111 @@
+/**********************************************************************************/
+/* BSD 3-Clause License                                                           */
+/*                                                                                */
+/* Copyright (c) 2018, pa.eeapai@gmail.com                                        */
+/* All rights reserved.                                                           */
+/*                                                                                */
+/* Redistribution and use in source and binary forms, with or without             */
+/* modification, are permitted provided that the following conditions are met:    */
+/*                                                                                */
+/* * Redistributions of source code must retain the above copyright notice, this  */
+/*   list of conditions and the following disclaimer.                             */
+/*                                                                                */
+/* * Redistributions in binary form must reproduce the above copyright notice,    */
+/*   this list of conditions and the following disclaimer in the documentation    */
+/*   and/or other materials provided with the distribution.                       */
+/*                                                                                */
+/* * Neither the name of the copyright holder nor the names of its                */
+/*   contributors may be used to endorse or promote products derived from         */
+/*   this software without specific prior written permission.                     */
+/*                                                                                */
+/* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"    */
+/* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE      */
+/* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE */
+/* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE   */
+/* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL     */
+/* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR     */
+/* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER     */
+/* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,  */
+/* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE  */
+/* OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.           */
+/**********************************************************************************/
+                                                                                  
+ENTRY(Reset_Handler)
+
+MEMORY
+{
+    ROM (rx)  : ORIGIN = 0x08000000, LENGTH = 64k
+    RAM (rwx) : ORIGIN = 0x20000000, LENGTH = 20k
+}
+
+_estack = ORIGIN(RAM) + LENGTH(RAM);    /* end of RAM */
+
+ENTRY(Reset_Handler)
+
+SECTIONS
+{  
+  .text_out :            /* Code goes into ROM */
+  {
+    KEEP(*(.isr_vector)) /* Startup code */
+    *(.text*)            /* .text* sections (code) */
+    
+    _sinit_array = .;
+    KEEP (*(SORT(.init_array.*)))
+    KEEP (*(.init_array))
+    . = ALIGN(4);
+    _einit_array = .;
+    
+    _sfinit_array = .;
+    KEEP (*(SORT(.finit_array.*)))
+    KEEP (*(.finit_array))
+    . = ALIGN(4);
+    _efinit_array = .;     
+        
+    _etext = .;          /* define a global symbols at end of code */
+  } >ROM
+
+  .rodata_out :          /* Constant data goes into ROM */
+  {
+    . = ALIGN(4);
+    *(.rodata*)          /* .rodata* sections (constants, strings, etc.) */
+    . = ALIGN(4);
+    _sidata = .;         /* Values for initialized data go here */
+  } >ROM
+
+  .data_out :            /* Initialized data sections goes into RAM */
+  {
+    _sdata = .;          /* Initialized data starts here */
+    *(.data*)            /* .data* sections */
+    . = ALIGN(4);
+    _edata = .;          /* Initialized data ends here */
+  } >RAM AT> ROM         /* Loaded in ROM */
+  
+  .ARM.exidx   :
+  {
+   __exidx_start = .;
+    *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    __exidx_end = .;
+  } >RAM
+  
+  .bss_out :             /* Uninitialized data section follows in RAM */
+  {
+    . = ALIGN(4);
+    _sbss = .;           /* Uninitialized (zero initialized) data starts here */
+    *(.bss*)
+    *(COMMON)
+    . = ALIGN(8);
+    _ebss = .;           /* Uninitialized (zero initialized) data ends here */
+    _end = .;
+  } >RAM
+  
+  /* Remove information from the standard libraries */
+  /DISCARD/ :
+  {
+    libc.a ( * )
+    libm.a ( * )
+    libgcc.a ( * )
+  }
+  
+}
+
+
