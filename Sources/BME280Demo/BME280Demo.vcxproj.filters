@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Comm">
+      <UniqueIdentifier>{a5f291c0-0224-479e-a83b-a99e9ee09f07}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BME280">
+      <UniqueIdentifier>{ebca06e1-8b20-4510-830e-2ffc95b030b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="HAL">
+      <UniqueIdentifier>{0fd2ce95-4eba-43f9-b6e7-d046390ba125}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Libs\Comm\WinComm\WinCommFactory.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\Comm\Common\ICommDevice.h">
+      <Filter>Comm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\BME280\BME280.h">
+      <Filter>BME280</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\HAL\HAL_IO32ICommProxy.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Libs\HAL\HAL_IO32.h">
+      <Filter>HAL</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BME280Demo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\Comm\WinComm\WinCommFactory.cpp">
+      <Filter>Comm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\BME280\BME280.cpp">
+      <Filter>BME280</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Libs\HAL\HAL_IO32ICommProxy.cpp">
+      <Filter>HAL</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
