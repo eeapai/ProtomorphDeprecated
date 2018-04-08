@@ -62,7 +62,8 @@ int main(void)
   printf("Press ENTER to exit\n");
 
   CLinuxSocketWrapper server;
-  CHAL_IO32_ICommHost io32Host(&io32, &server, "1032");
+  unsigned char abyPinBuff[1024];
+  CHAL_IO32_ICommHost io32Host(&io32, abyPinBuff, sizeof(abyPinBuff), &server, "1032");
 
   bool bRun = true;
   int nHostState = -1;

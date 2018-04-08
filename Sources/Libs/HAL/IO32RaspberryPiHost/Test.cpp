@@ -31,7 +31,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 #include "LinuxSocketWrapper.h"
 #include "HAL_IO32LinuxImpl.h"
-#include "HAL_IO32LinuxHost.h"
 #include <unistd.h> // sleep
 
 void socketWrapperTest()

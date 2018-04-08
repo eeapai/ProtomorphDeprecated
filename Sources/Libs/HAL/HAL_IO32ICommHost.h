@@ -38,7 +38,7 @@
 class CHAL_IO32_ICommHost
 {
 public:
-  CHAL_IO32_ICommHost(IHAL_IO32 *pHAL_IO32, ICommDevice *pComm, const char *pcszConnectionPath);
+  CHAL_IO32_ICommHost(IHAL_IO32 *pHAL_IO32, unsigned char *pbyPinsBuff, int nPinsBuffSize, ICommDevice *pComm, const char *pcszConnectionPath);
 public:
   enum EHostState
   {
@@ -60,6 +60,8 @@ private:
   IHAL_IO32 *m_pHAL_IO32 = nullptr;
   ICommDevice *m_pComm = nullptr;
   char m_achConnectionPath[128];
+  unsigned char *m_pbyPinsBuff = nullptr;
+  int m_nPinsBuffSize = 0;
 };
 
 #endif

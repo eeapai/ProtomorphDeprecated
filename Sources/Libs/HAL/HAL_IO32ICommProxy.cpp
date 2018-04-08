@@ -65,28 +65,19 @@ int CHAL_IO32_ICommProxy::DoIO(int nNum, const unsigned char * pbyPinsIn, unsign
   }
 
   int nNumSent = 0;
-  while ( nNumSent < nNum )
+  unsigned long dwNumReceived = 0;
+  while ( ( nNumSent < nNum ) || ( dwNumReceived < dwNumToRead ) )
   {
     unsigned long dwNumJustSent = 0;
-    if ( !SendData(pbyPinsIn + nNumSent, nNum - nNumSent, &dwNumJustSent) )
-    {
-      return IO32_COMM_PROXY_ERROR_SEND;
-    }
+    SendData(pbyPinsIn + nNumSent, nNum - nNumSent, &dwNumJustSent);
     if ( !IsConnectionOK() )
     {
       return IO32_COMM_PROXY_ERROR_SEND;
     }
     nNumSent += dwNumJustSent;
-  }
 
-  unsigned long dwNumReceived = 0;
-  while ( dwNumReceived < dwNumToRead )
-  {
     unsigned long dwNumJustReceived = 0;
-    if ( !ReceiveData(pbyPinsOut + dwNumReceived, dwNumToRead - dwNumReceived, &dwNumJustReceived) )
-    {
-      return IO32_COMM_PROXY_ERROR_SEND;
-    }
+    ReceiveData(pbyPinsOut + dwNumReceived, dwNumToRead - dwNumReceived, &dwNumJustReceived);
     if ( !IsConnectionOK() )
     {
       return IO32_COMM_PROXY_ERROR_RECEIVE;
@@ -106,23 +97,27 @@ bool CHAL_IO32_ICommProxy::IsConnectionOK() const
   return false;
 }
 
-bool CHAL_IO32_ICommProxy::ReceiveData(unsigned char * pbyNewData, unsigned long dwNumMaxBytes, unsigned long * pdwNumBytesReceived)
+void CHAL_IO32_ICommProxy::ReceiveData(unsigned char * pbyNewData, unsigned long dwNumMaxBytes, unsigned long * pdwNumBytesReceived)
 {
-  if ( m_pCommDevice )
+  if ( pdwNumBytesReceived )
+  {
+    *pdwNumBytesReceived = 0;
+  }
+  if ( m_pCommDevice && dwNumMaxBytes )
   {
     m_pCommDevice->Receive(pbyNewData, dwNumMaxBytes, pdwNumBytesReceived);
-    return ICommDevice::connectionConnected == m_pCommDevice->GetStatus();
   }
-  return false;
 }
 
-bool CHAL_IO32_ICommProxy::SendData(const unsigned char * pbyData, unsigned long dwNumBytes, unsigned long * pdwNumBytesSent)
+void CHAL_IO32_ICommProxy::SendData(const unsigned char * pbyData, unsigned long dwNumBytes, unsigned long * pdwNumBytesSent)
 {
-  if ( m_pCommDevice )
+  if ( pdwNumBytesSent )
+  {
+    *pdwNumBytesSent = 0;
+  }
+  if ( m_pCommDevice && dwNumBytes )
   {
     m_pCommDevice->Send(pbyData, dwNumBytes, pdwNumBytesSent);
-    return ICommDevice::connectionConnected == m_pCommDevice->GetStatus();
   }
-  return false;
 }
 

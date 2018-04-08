@@ -146,7 +146,10 @@ int main()
   /* Start Device Process */
   USBD_Start(&USBD_Device);
 
-  CHAL_IO32_ICommHost io32Host(&io32, pCommDev, "");
+  // Optimization trick:
+  // Give comm buff to IO32 for pin buffer so that memmove finishes faster when reading
+  // data arriving on communication channel.
+  CHAL_IO32_ICommHost io32Host(&io32, g_abyCommBuf, sizeof(g_abyCommBuf), pCommDev, "");
 
   while ( bModeIO32 )
   {

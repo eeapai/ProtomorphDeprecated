@@ -33,9 +33,11 @@
 
 // #TODO_IO32_ICOMM_HOST Command buffer must handle max comm buffer; handle smaller buffers in Comm infrastructure
 
-CHAL_IO32_ICommHost::CHAL_IO32_ICommHost(IHAL_IO32 *pHAL_IO32, ICommDevice *pComm, const char *pcszConnectionPath) :
+CHAL_IO32_ICommHost::CHAL_IO32_ICommHost(IHAL_IO32 *pHAL_IO32, unsigned char *pbyPinsBuff, int nPinsBuffSize, ICommDevice *pComm, const char *pcszConnectionPath) :
   m_pHAL_IO32(pHAL_IO32),
-  m_pComm(pComm)
+  m_pComm(pComm),
+  m_pbyPinsBuff(pbyPinsBuff),
+  m_nPinsBuffSize(nPinsBuffSize)
 {
   char *pszConnectionPath = m_achConnectionPath;
   if ( pcszConnectionPath )
@@ -89,9 +91,8 @@ int CHAL_IO32_ICommHost::HostProcess()
     }
   }
 
-  unsigned char abyPinsIn[1024];
   unsigned long dwNumPinsIn = 0;
-  m_pComm->Receive(abyPinsIn, sizeof(abyPinsIn), &dwNumPinsIn);
+  m_pComm->Receive(m_pbyPinsBuff, m_nPinsBuffSize, &dwNumPinsIn);
 
   if ( ICommDevice::connectionConnected != m_pComm->GetStatus() )
   {
@@ -103,8 +104,7 @@ int CHAL_IO32_ICommHost::HostProcess()
     return io32hostWaitingDataFromClient;
   }
 
-  unsigned char abyPinsOut[sizeof(abyPinsIn)];
-  int nCountOfReads = m_pHAL_IO32->DoIO(dwNumPinsIn, abyPinsIn, abyPinsOut);
+  int nCountOfReads = m_pHAL_IO32->DoIO(dwNumPinsIn, m_pbyPinsBuff, m_pbyPinsBuff);
   
   if ( 0 > nCountOfReads )
   {
@@ -116,7 +116,7 @@ int CHAL_IO32_ICommHost::HostProcess()
   while ( nNumReadsOut < nCountOfReads )
   {
     unsigned long dwNumPinsOutCurrent = 0;
-    m_pComm->Send(abyPinsOut + nNumReadsOut, nCountOfReads - nNumReadsOut, &dwNumPinsOutCurrent);
+    m_pComm->Send(m_pbyPinsBuff + nNumReadsOut, nCountOfReads - nNumReadsOut, &dwNumPinsOutCurrent);
     if ( ICommDevice::connectionConnected != m_pComm->GetStatus() )
     {
       return io32hostUnexpectedClientDisconnect;
