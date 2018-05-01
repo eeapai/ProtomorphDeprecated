@@ -78,12 +78,12 @@
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_cortex.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_cortex.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_gpio.c</name>
@@ -93,12 +93,12 @@
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_pcd.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_pcd_ex.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_pcd_ex.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_rcc.c</name>
@@ -108,7 +108,7 @@
 		<link>
 			<name>CubeF1Files/stm32f1xx_hal_rcc_ex.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_rcc_ex.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/stm32f1xx_ll_usb.c</name>
@@ -118,22 +118,22 @@
 		<link>
 			<name>CubeF1Files/system_stm32f1xx.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/system_stm32f1xx.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/usbd_core.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_core.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/usbd_ctlreq.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ctlreq.c</location>
 		</link>
 		<link>
 			<name>CubeF1Files/usbd_ioreq.c</name>
 			<type>1</type>
-			<location>D:/Libz/ST/STM32Cube_FW_F1_V1.6.0/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</location>
+			<location>IO32STM32F103USB_CUBEF1_LOC/Middlewares/ST/STM32_USB_Device_Library/Core/Src/usbd_ioreq.c</location>
 		</link>
 		<link>
 			<name>HAL/HAL_IO32.h</name>
