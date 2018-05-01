@@ -39,7 +39,7 @@ set EXTERNAL_LIBS=%~3
 
 echo [%ECLIPSE_BUILD%] Eclipse build started
 
-set BACKUP_ECLIPSE_LOCATION=\eclipse
+set BACKUP_ECLIPSE_LOCATION=%~d0\eclipse
 if [%ECLIPSE_LOCATION%]==[] (
   set ECLIPSE_LOCATION=%BACKUP_ECLIPSE_LOCATION%
   echo [%ECLIPSE_BUILD%] Eclipse location not provided.
