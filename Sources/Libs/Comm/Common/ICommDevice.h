@@ -47,11 +47,11 @@ struct ICommDevice
   };
   virtual int GetStatus() const = 0;
   
-  virtual void Send(const unsigned char *pbyData,
+  virtual void Send(const void *pSource,
                     unsigned long dwByteCount,
                     unsigned long *pdwSentByteCount) = 0;
   
-  virtual void Receive(unsigned char *pbyDestination,
+  virtual void Receive(void *pDestination,
                        unsigned long dwMaxByteCount,        ///< Allowed to block if zero
                        unsigned long *pdwHowManyBytes) = 0;
   

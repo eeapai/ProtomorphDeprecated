@@ -257,7 +257,7 @@ void CWinSockWrapper::Disconnect()
   }
 }
 
-void CWinSockWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived)
+void CWinSockWrapper::ReceiveData(void *pDestination, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived)
 {
   *pdwNumBytesReceived = 0;
   if ( INVALID_SOCKET == m_connectionSocket )
@@ -270,7 +270,7 @@ void CWinSockWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long dwNum
     Disconnect();
     return;
   }
-  int iResult = recv(m_connectionSocket, (char *)pbyNewData, dwNumMaxBytes, 0);
+  int iResult = recv(m_connectionSocket, (char *)pDestination, dwNumMaxBytes, 0);
   if ( iResult > 0 )
   {
     *pdwNumBytesReceived = iResult;
@@ -297,7 +297,7 @@ void CWinSockWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long dwNum
     Disconnect();
   }
 }
-void CWinSockWrapper::SendData(const unsigned char *pbyData, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
+void CWinSockWrapper::SendData(const void *pSource, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
 {
   if (pdwNumBytesSent)
   {
@@ -309,7 +309,7 @@ void CWinSockWrapper::SendData(const unsigned char *pbyData, unsigned long dwNum
     return;
   }
   
-  int nResult = send(m_connectionSocket, (char*)pbyData, dwNumBytes, 0);
+  int nResult = send(m_connectionSocket, (char*)pSource, dwNumBytes, 0);
   if ( nResult < 0 )
   {
     _LOG("send call failed with WSA error: %d\n", WSAGetLastError());
@@ -380,12 +380,12 @@ void CWinSockWrapper::Connect(const char * pcszWhereTo)
   }
 }
 
-void CWinSockWrapper::Send(const unsigned char * pbyData, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+void CWinSockWrapper::Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
 {
-  SendData(pbyData, dwByteCount, pdwSentByteCount);
+  SendData(pSource, dwByteCount, pdwSentByteCount);
 }
 
-void CWinSockWrapper::Receive(unsigned char * pbyDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+void CWinSockWrapper::Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
 {
-  ReceiveData(pbyDestination, dwMaxByteCount, pdwHowManyBytes);
+  ReceiveData(pDestination, dwMaxByteCount, pdwHowManyBytes);
 }

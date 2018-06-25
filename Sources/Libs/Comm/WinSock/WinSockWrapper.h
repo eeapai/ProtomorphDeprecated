@@ -58,8 +58,8 @@ public:
   void Connect(const char *pcszDestination, unsigned short wPort);
   void Disconnect();
 
-  void ReceiveData(unsigned char *pbyNewData, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived);
-  void SendData(const unsigned char *pbyData, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent);
+  void ReceiveData(void *pDestination, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived);
+  void SendData(const void *pSource, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent);
 
   bool IsServerOK() const;
   bool IsClientOK() const;
@@ -68,8 +68,8 @@ public:
   static int ListConnection(unsigned long dwConnection, char * pszDestination, int nMaxAddressLength);
   void Connect(const char * pcszWhereTo) override;
   int GetStatus() const override;
-  void Send(const unsigned char * pbyData, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
-  void Receive(unsigned char * pbyDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
+  void Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
+  void Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
 
 private:
   SOCKET m_listenSocket = INVALID_SOCKET;

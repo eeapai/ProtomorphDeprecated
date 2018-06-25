@@ -47,9 +47,9 @@ public:
   BOOL ConnectTo(LPCSTR pcszDevice);  ///< Device name from ListDevices
   void Disconnect();
 
-  BOOL SendData(const BYTE *pbyBuffer, DWORD dwBufferSizeInBytes);
+  BOOL SendData(const void *pSource, DWORD dwBufferSizeInBytes);
   BOOL CanReceive(DWORD &rdwNumBytes);
-  BOOL DoReceive(unsigned char *pbyData, DWORD dwNumBytes);
+  BOOL DoReceive(void *pDestination, DWORD dwNumBytes);
 
   DWORD GetMaxBuffer() const { return m_dwCommBufferSizeInBytes; }
 
@@ -58,8 +58,8 @@ public:
   // Inherited via ICommDevice
   void Connect(const char * pcszWhereTo) override;
   int GetStatus() const override;
-  void Send(const unsigned char * pbyData, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
-  void Receive(unsigned char * pbyDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
+  void Send(const void * pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
+  void Receive(void * pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
 
   struct SDeviceInfo
   {
@@ -80,14 +80,14 @@ private:
   BOOL controlWrite(BYTE byWinUSBCommControl, BYTE *pbyData = NULL, WORD wNumBytesCount = 0);
   BOOL controlRead(BYTE byWinUSBCommControl, BYTE *pbyData, WORD wNumBytesCount);
 
-  BOOL bulkWrite(const BYTE *pbyData, DWORD dwNumBytesCount);
-  BOOL bulkRead(BYTE *pbyData, DWORD dwNumBytesCount);
+  BOOL bulkWrite(const void *pSource, DWORD dwNumBytesCount);
+  BOOL bulkRead(void *pDestination, DWORD dwNumBytesCount);
 
   BOOL reset();
   BYTE readStatus();
   BOOL getResponseLength(DWORD &rdwNumBytes);
 
-  BOOL doSend(const BYTE *pbyData, DWORD dwNumBytesCount);
+  BOOL doSend(const void *pSource, DWORD dwNumBytesCount);
 
 private:
   static GUID sm_WinUSBCommInterfaceGUID;

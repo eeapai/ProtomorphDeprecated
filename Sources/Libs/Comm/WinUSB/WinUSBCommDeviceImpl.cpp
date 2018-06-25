@@ -734,14 +734,14 @@ BOOL CWinUSBCommDeviceImpl::controlRead(BYTE byWinUSBCommControl, BYTE *pbyData,
   return bResult;
 }
 
-BOOL CWinUSBCommDeviceImpl::bulkWrite(const BYTE *pbyData, DWORD dwNumBytesCount)
+BOOL CWinUSBCommDeviceImpl::bulkWrite(const void *pSource, DWORD dwNumBytesCount)
 {
   if ( 0 == dwNumBytesCount )
   {
     return TRUE;
   }
 
-  if ( NULL == pbyData )
+  if ( NULL == pSource )
   {
     return FALSE;
   }
@@ -751,7 +751,7 @@ BOOL CWinUSBCommDeviceImpl::bulkWrite(const BYTE *pbyData, DWORD dwNumBytesCount
 
   if ( bResult )
   {
-    bResult = CWinUSBWrapper::WritePipe(m_hWinUSBHandle, m_byPipeOutId, const_cast<BYTE *>(pbyData), dwNumBytesCount, &cbSent, 0);
+    bResult = CWinUSBWrapper::WritePipe(m_hWinUSBHandle, m_byPipeOutId, (BYTE *)pSource, dwNumBytesCount, &cbSent, 0);
     PTRACE("Wrote to pipe %d: %d bytes\nActual data transferred: %d.\n", m_byPipeOutId, dwNumBytesCount, cbSent);
   }
 
@@ -763,14 +763,14 @@ BOOL CWinUSBCommDeviceImpl::bulkWrite(const BYTE *pbyData, DWORD dwNumBytesCount
   return bResult;
 }
 
-BOOL CWinUSBCommDeviceImpl::bulkRead(BYTE *pbyData, DWORD dwNumBytesCount)
+BOOL CWinUSBCommDeviceImpl::bulkRead(void *pDestination, DWORD dwNumBytesCount)
 {
   if ( 0 == dwNumBytesCount )
   {
     return TRUE;
   }
 
-  if ( NULL == pbyData )
+  if ( NULL == pDestination )
   {
     return FALSE;
   }
@@ -780,7 +780,7 @@ BOOL CWinUSBCommDeviceImpl::bulkRead(BYTE *pbyData, DWORD dwNumBytesCount)
 
   if ( bResult )
   {
-    bResult = CWinUSBWrapper::ReadPipe(m_hWinUSBHandle, m_byPipeInId, pbyData, dwNumBytesCount, &cbRead, 0);
+    bResult = CWinUSBWrapper::ReadPipe(m_hWinUSBHandle, m_byPipeInId, (BYTE *)pDestination, dwNumBytesCount, &cbRead, 0);
     PTRACE("Read from pipe %d: %d bytes\nActual data read: %d.\n", m_byPipeInId, dwNumBytesCount, cbRead);
   }
 
@@ -792,17 +792,17 @@ BOOL CWinUSBCommDeviceImpl::bulkRead(BYTE *pbyData, DWORD dwNumBytesCount)
   return bResult;
 }
 
-BOOL CWinUSBCommDeviceImpl::SendData(const BYTE *pbyBuffer, DWORD dwBufferSizeInBytes)
+BOOL CWinUSBCommDeviceImpl::SendData(const void *pSource, DWORD dwBufferSizeInBytes)
 {
   if ( !IsConnected() )
   {
     return FALSE;
   }
 
-  return doSend(pbyBuffer, dwBufferSizeInBytes);
+  return doSend(pSource, dwBufferSizeInBytes);
 }
 
-BOOL CWinUSBCommDeviceImpl::doSend(const BYTE *pbyData, DWORD dwNumBytesCount)
+BOOL CWinUSBCommDeviceImpl::doSend(const void *pSource, DWORD dwNumBytesCount)
 {
   if ( dwNumBytesCount > m_dwCommBufferSizeInBytes )
   {
@@ -827,7 +827,7 @@ BOOL CWinUSBCommDeviceImpl::doSend(const BYTE *pbyData, DWORD dwNumBytesCount)
 
   if ( bResult )
   {
-    bResult = bulkWrite(pbyData, dwNumBytesCount);
+    bResult = bulkWrite(pSource, dwNumBytesCount);
   }
 
   if ( bResult )
@@ -884,13 +884,13 @@ int CWinUSBCommDeviceImpl::GetStatus() const
   return IsConnected() ? ICommDevice::connectionConnected : ICommDevice::connectionDown;
 }
 
-void CWinUSBCommDeviceImpl::Send(const unsigned char * pbyData, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+void CWinUSBCommDeviceImpl::Send(const void * pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
 {
   if ( pdwSentByteCount )
   {
     *pdwSentByteCount = 0;
   }
-  if ( SendData(pbyData, dwByteCount) )
+  if ( SendData(pSource, dwByteCount) )
   {
     if ( pdwSentByteCount )
     {
@@ -903,7 +903,7 @@ void CWinUSBCommDeviceImpl::Send(const unsigned char * pbyData, unsigned long dw
   }
 }
 
-void CWinUSBCommDeviceImpl::Receive(unsigned char * pbyDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+void CWinUSBCommDeviceImpl::Receive(void * pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
 {
   if ( pdwHowManyBytes )
   {
@@ -920,7 +920,7 @@ void CWinUSBCommDeviceImpl::Receive(unsigned char * pbyDestination, unsigned lon
     Disconnect();
   }
 
-  if ( DoReceive(pbyDestination, dwNumBytesWaiting) )
+  if ( DoReceive(pDestination, dwNumBytesWaiting) )
   {
     if ( pdwHowManyBytes )
     {
@@ -963,14 +963,14 @@ BOOL CWinUSBCommDeviceImpl::CanReceive(DWORD &rdwNumBytes)
   return TRUE;
 }
 
-BOOL CWinUSBCommDeviceImpl::DoReceive(unsigned char *pbyData, DWORD dwNumBytes)
+BOOL CWinUSBCommDeviceImpl::DoReceive(void *pDestination, DWORD dwNumBytes)
 {
   if ( !IsConnected() )
   {
     return FALSE;
   }
 
-  BOOL bResult = bulkRead(pbyData, dwNumBytes);
+  BOOL bResult = bulkRead(pDestination, dwNumBytes);
   return bResult;
 }
 

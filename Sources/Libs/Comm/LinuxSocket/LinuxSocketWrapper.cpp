@@ -197,7 +197,7 @@ void CLinuxSocketWrapper::DisconnectClient()
   }
 }
 
-void CLinuxSocketWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived, unsigned long dwTimeout_ms /*= 100*/)
+void CLinuxSocketWrapper::ReceiveData(void *pDestination, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived, unsigned long dwTimeout_ms /*= 100*/)
 {
   *pdwNumBytesReceived = 0;
   if ( !IsClientOK() )
@@ -221,7 +221,7 @@ void CLinuxSocketWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long d
     fd2poll.revents = 0;
     poll(&fd2poll, 1, dwTimeout_ms);
   }
-  int iResult = recv(m_connectionSocket, (char *)pbyNewData, dwNumMaxBytes, MSG_DONTWAIT);
+  int iResult = recv(m_connectionSocket, (char *)pDestination, dwNumMaxBytes, MSG_DONTWAIT);
   if ( iResult > 0 )
   {
     *pdwNumBytesReceived = iResult;
@@ -248,7 +248,7 @@ void CLinuxSocketWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long d
     DisconnectClient();
   }
 }
-void CLinuxSocketWrapper::SendData(const unsigned char *pbyData, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
+void CLinuxSocketWrapper::SendData(const void *pSource, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
 {
   *pdwNumBytesSent = 0;
   if ( !IsClientOK() )
@@ -261,7 +261,7 @@ void CLinuxSocketWrapper::SendData(const unsigned char *pbyData, unsigned long d
     return;
   }
   
-  int nResult = send(m_connectionSocket, (char*)pbyData, dwNumBytes, 0);
+  int nResult = send(m_connectionSocket, (char*)pSource, dwNumBytes, 0);
   if ( nResult < 0 )
   {
     _LOG("ERROR from recv call with errno %d", getErrno());
@@ -330,14 +330,14 @@ void CLinuxSocketWrapper::Connect(const char * pcszWhereTo)
   }
 }
 
-void CLinuxSocketWrapper::Send(const unsigned char * pbyData, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+void CLinuxSocketWrapper::Send(const void * pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
 {
-  SendData(pbyData, dwByteCount, pdwSentByteCount);
+  SendData(pSource, dwByteCount, pdwSentByteCount);
 }
 
-void CLinuxSocketWrapper::Receive(unsigned char * pbyDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+void CLinuxSocketWrapper::Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
 {
-  ReceiveData(pbyDestination, dwMaxByteCount, pdwHowManyBytes);
+  ReceiveData(pDestination, dwMaxByteCount, pdwHowManyBytes);
 }
 
 void CLinuxSocketWrapper::Disconnect()
