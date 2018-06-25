@@ -182,7 +182,7 @@ void CWinSockWrapper::StopListening()
 }
 void CWinSockWrapper::AcceptNewConnection()
 {
-  if ( INVALID_SOCKET == m_connectionSocket )
+  if ( INVALID_SOCKET == m_listenSocket)
   {
     return;
   }
@@ -299,7 +299,10 @@ void CWinSockWrapper::ReceiveData(unsigned char *pbyNewData, unsigned long dwNum
 }
 void CWinSockWrapper::SendData(const unsigned char *pbyData, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
 {
-  *pdwNumBytesSent = 0;
+  if (pdwNumBytesSent)
+  {
+    *pdwNumBytesSent = 0;
+  }
   if ( INVALID_SOCKET == m_connectionSocket )
   {
     _LOG("No connection to send data");
@@ -314,7 +317,10 @@ void CWinSockWrapper::SendData(const unsigned char *pbyData, unsigned long dwNum
   }
   else
   {
-    *pdwNumBytesSent = nResult;
+    if (pdwNumBytesSent)
+    {
+      *pdwNumBytesSent = nResult;
+    }
   }
 }
 
@@ -348,6 +354,11 @@ int CWinSockWrapper::ListConnection(unsigned long dwConnection, char * pszDestin
 
 void CWinSockWrapper::Connect(const char * pcszWhereTo)
 {
+  if (!pcszWhereTo)
+  {
+    AcceptNewConnection();
+    return;
+  }
   // format: [address:]port
   std::string strPort = pcszWhereTo;
   std::string strAddress;
