@@ -166,7 +166,7 @@ int main()
       pCommDev->Connect(nullptr);
       continue;
     }
-    pCommDev->Receive(g_abyCommBuf, sizeof(g_abyCommBuf), &dwNumBytes);
+    dwNumBytes = pCommDev->Receive(g_abyCommBuf, sizeof(g_abyCommBuf));
     if ( ICommDevice::connectionConnected != pCommDev->GetStatus() )
     {
       continue;
@@ -175,7 +175,7 @@ int main()
     {
       continue;
     }
-    pCommDev->Send(g_abyCommBuf, dwNumBytes, nullptr);
+    pCommDev->Send(g_abyCommBuf, dwNumBytes);
   }
   return 0;
 }

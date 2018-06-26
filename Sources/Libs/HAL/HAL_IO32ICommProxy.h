@@ -46,8 +46,8 @@ public:
 
 private:
   bool IsConnectionOK() const;
-  void ReceiveData(unsigned char *pbyNewData, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived);
-  void SendData(const unsigned char *pbyData, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent);
+  uint32_t ReceiveData(unsigned char *pbyNewData, uint32_t dwNumMaxBytes);
+  uint32_t SendData(const unsigned char *pbyData, uint32_t dwNumBytes);
 
 private:
   ICommDevice * m_pCommDevice;

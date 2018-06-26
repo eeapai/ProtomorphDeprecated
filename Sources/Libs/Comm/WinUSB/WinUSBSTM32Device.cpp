@@ -50,44 +50,27 @@ int CWinUSBSTM32Device::GetStatus() const
   return ICommDevice::connectionConnected;
 }
 
-void CWinUSBSTM32Device::Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+uint32_t CWinUSBSTM32Device::Send(const void *pSource, uint32_t dwByteCount)
 {
   if ( m_dwSendByteCountUSB )
   {
-    if ( pdwSentByteCount )
-    {
-      *pdwSentByteCount = 0;
-    }
+    return 0;
   }
-  else
-  {
-    memmove(m_pbyBuffer, pSource, dwByteCount);
-    if ( pdwSentByteCount )
-    {
-      *pdwSentByteCount = dwByteCount;
-    }
-    m_dwSendByteCountUSB = dwByteCount;
-  }
+  memmove(m_pbyBuffer, pSource, dwByteCount);
+  m_dwSendByteCountUSB = dwByteCount;
+  return dwByteCount;
 }
 
-void CWinUSBSTM32Device::Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+uint32_t CWinUSBSTM32Device::Receive(void *pDestination, uint32_t dwMaxByteCount)
 {
   if ( m_dwReceivedByteCount )
   {
     memmove(pDestination, m_pbyBuffer, m_dwReceivedByteCount);
-    if ( pdwHowManyBytes )
-    {
-      *pdwHowManyBytes = m_dwReceivedByteCount;
-    }
+    uint32_t dwReceived = m_dwReceivedByteCount;
     m_dwReceivedByteCount = 0;
+    return dwReceived;
   }
-  else
-  {
-    if ( pdwHowManyBytes )
-    {
-      *pdwHowManyBytes = 0;
-    }
-  }
+  return 0;
 }
 
 void CWinUSBSTM32Device::Disconnect()

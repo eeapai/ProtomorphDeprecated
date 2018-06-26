@@ -66,8 +66,8 @@ public:
   // Inherited via ICommDevice
   virtual void Connect(const char * pcszWhereTo) override;
   virtual int GetStatus() const override;
-  virtual void Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
-  virtual void Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
+  virtual uint32_t Send(const void *pSource, uint32_t dwByteCount) override;
+  virtual uint32_t Receive(void *pDestination, uint32_t dwMaxByteCount) override;
   virtual void Disconnect() override;
 };
 

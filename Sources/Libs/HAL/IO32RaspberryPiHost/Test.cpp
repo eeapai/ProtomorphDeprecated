@@ -58,14 +58,16 @@ void socketWrapperTest()
   unsigned long dwSent = 0;
   if ( bOK )
   {
-    client.SendData((unsigned char *)"Hello", 6, &dwSent);
+    dwSent = client.SendData((unsigned char *)"Hello", 6);
+    bOK = dwSent;
   }
 
   unsigned char achData[6] = { 0 };
   unsigned long dwReceived = 0;
   if ( bOK )
   {
-    host.ReceiveData(achData, 6, &dwReceived);
+    dwReceived = host.ReceiveData(achData, 6);
+    bOK = dwReceived;
   }
 
   if ( bOK )

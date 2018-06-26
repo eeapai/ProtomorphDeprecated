@@ -91,8 +91,7 @@ int CHAL_IO32_ICommHost::HostProcess()
     }
   }
 
-  unsigned long dwNumPinsIn = 0;
-  m_pComm->Receive(m_pbyPinsBuff, m_nPinsBuffSize, &dwNumPinsIn);
+  unsigned long dwNumPinsIn = m_pComm->Receive(m_pbyPinsBuff, m_nPinsBuffSize);
 
   if ( ICommDevice::connectionConnected != m_pComm->GetStatus() )
   {
@@ -115,8 +114,7 @@ int CHAL_IO32_ICommHost::HostProcess()
   int nNumReadsOut = 0;
   while ( nNumReadsOut < nCountOfReads )
   {
-    unsigned long dwNumPinsOutCurrent = 0;
-    m_pComm->Send(m_pbyPinsBuff + nNumReadsOut, nCountOfReads - nNumReadsOut, &dwNumPinsOutCurrent);
+    unsigned long dwNumPinsOutCurrent = m_pComm->Send(m_pbyPinsBuff + nNumReadsOut, nCountOfReads - nNumReadsOut);
     if ( ICommDevice::connectionConnected != m_pComm->GetStatus() )
     {
       return io32hostUnexpectedClientDisconnect;

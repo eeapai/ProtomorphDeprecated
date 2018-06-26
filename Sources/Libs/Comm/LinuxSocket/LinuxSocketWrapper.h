@@ -47,8 +47,8 @@ public:
   void DisconnectClient();
   void Disconnect();
 
-  void ReceiveData(void *pDestination, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived, unsigned long dwTimeout_ms = 100);
-  void SendData(const void *pSource, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent);
+  uint32_t ReceiveData(void *pDestination, uint32_t dwNumMaxBytes, unsigned long dwTimeout_ms = 100);
+  uint32_t SendData(const void *pSource, uint32_t dwNumBytes);
 
   bool IsServerOK() const;
   bool IsClientOK() const;
@@ -65,8 +65,8 @@ public:
   // Inherited via ICommDevice
   int GetStatus() const override;
   void Connect(const char * pcszWhereTo) override;
-  void Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
-  void Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
+  uint32_t Send(const void *pSource, uint32_t dwByteCount) override;
+  uint32_t Receive(void *pDestination, uint32_t dwMaxByteCount) override;
 };
 
 #endif

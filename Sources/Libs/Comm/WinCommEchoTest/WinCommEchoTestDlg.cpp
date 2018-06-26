@@ -219,8 +219,7 @@ void CWinCommEchoTestDlg::doOneWinCommEchoTest()
   DWORD dwSent = 0;
   while ( bResult && ( dwSent < dwTestSize ) )
   {
-    DWORD dwJustSent = 0;
-    m_commDevice.Send(m_pbyTestBuffer + dwSent, dwTestSize - dwSent, &dwJustSent);
+    DWORD dwJustSent = m_commDevice.Send(m_pbyTestBuffer + dwSent, dwTestSize - dwSent);
     if ( ICommDevice::connectionConnected != m_commDevice.GetStatus() )
     {
       bResult = false;
@@ -233,8 +232,7 @@ void CWinCommEchoTestDlg::doOneWinCommEchoTest()
   DWORD dwReceived = 0;
   while ( bResult && ( dwReceived < dwTestSize ) )
   {
-    DWORD dwJustReceived = 0;
-    m_commDevice.Receive(m_pbyTestBuffer + dwReceived, dwTestSize - dwReceived, &dwJustReceived);
+    DWORD dwJustReceived = m_commDevice.Receive(m_pbyTestBuffer + dwReceived, dwTestSize - dwReceived);
     if ( ICommDevice::connectionConnected != m_commDevice.GetStatus() )
     {
       bResult = false;

@@ -884,35 +884,22 @@ int CWinUSBCommDeviceImpl::GetStatus() const
   return IsConnected() ? ICommDevice::connectionConnected : ICommDevice::connectionDown;
 }
 
-void CWinUSBCommDeviceImpl::Send(const void * pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+uint32_t CWinUSBCommDeviceImpl::Send(const void * pSource, uint32_t dwByteCount)
 {
-  if ( pdwSentByteCount )
-  {
-    *pdwSentByteCount = 0;
-  }
   if ( SendData(pSource, dwByteCount) )
   {
-    if ( pdwSentByteCount )
-    {
-      *pdwSentByteCount = dwByteCount;
-    }
+    return dwByteCount;
   }
-  else
-  {
-    Disconnect();
-  }
+  Disconnect();
+  return 0;
 }
 
-void CWinUSBCommDeviceImpl::Receive(void * pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+uint32_t CWinUSBCommDeviceImpl::Receive(void * pDestination, uint32_t dwMaxByteCount)
 {
-  if ( pdwHowManyBytes )
-  {
-    *pdwHowManyBytes = 0;
-  }
   unsigned long dwNumBytesWaiting = 0;
   if ( !CanReceive(dwNumBytesWaiting) )
   {
-    return;
+    return 0;
   }
 
   if ( dwMaxByteCount < dwNumBytesWaiting )
@@ -922,15 +909,10 @@ void CWinUSBCommDeviceImpl::Receive(void * pDestination, unsigned long dwMaxByte
 
   if ( DoReceive(pDestination, dwNumBytesWaiting) )
   {
-    if ( pdwHowManyBytes )
-    {
-      *pdwHowManyBytes = dwNumBytesWaiting;
-    }
+    return dwNumBytesWaiting;
   }
-  else
-  {
-    Disconnect();
-  }
+  Disconnect();
+  return 0;
 }
 
 BOOL CWinUSBCommDeviceImpl::CanReceive(DWORD &rdwNumBytes)

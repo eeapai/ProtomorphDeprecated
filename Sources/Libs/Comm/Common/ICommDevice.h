@@ -32,6 +32,8 @@
 #ifndef __I_COMM_DEVICE_H__
 #define __I_COMM_DEVICE_H__
 
+#include <stdint.h>
+
 struct ICommDevice
 {
   virtual ~ICommDevice(){}
@@ -47,13 +49,11 @@ struct ICommDevice
   };
   virtual int GetStatus() const = 0;
   
-  virtual void Send(const void *pSource,
-                    unsigned long dwByteCount,
-                    unsigned long *pdwSentByteCount) = 0;
+  virtual uint32_t Send(const void *pSource,
+                        uint32_t dwByteCount) = 0;
   
-  virtual void Receive(void *pDestination,
-                       unsigned long dwMaxByteCount,        ///< Allowed to block if zero
-                       unsigned long *pdwHowManyBytes) = 0;
+  virtual uint32_t Receive(void *pDestination,
+                           uint32_t dwMaxByteCount) = 0;        ///< Allowed to block if zero
   
   /// Can be called multiple times
   virtual void Disconnect() = 0;

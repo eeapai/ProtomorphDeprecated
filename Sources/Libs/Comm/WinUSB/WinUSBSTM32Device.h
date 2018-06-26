@@ -82,8 +82,8 @@ class CWinUSBSTM32Device : public ICommDevice
 public:
   void Connect(const char * pcszWhereTo) override;
   int GetStatus() const override;
-  void Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount) override;
-  void Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes) override;
+  uint32_t Send(const void *pSource, uint32_t dwByteCount) override;
+  uint32_t Receive(void *pDestination, uint32_t dwMaxByteCount) override;
   void Disconnect() override;
 
 public:

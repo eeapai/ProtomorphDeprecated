@@ -68,16 +68,14 @@ int CHAL_IO32_ICommProxy::DoIO(int nNum, const unsigned char * pbyPinsIn, unsign
   unsigned long dwNumReceived = 0;
   while ( ( nNumSent < nNum ) || ( dwNumReceived < dwNumToRead ) )
   {
-    unsigned long dwNumJustSent = 0;
-    SendData(pbyPinsIn + nNumSent, nNum - nNumSent, &dwNumJustSent);
+    unsigned long dwNumJustSent = SendData(pbyPinsIn + nNumSent, nNum - nNumSent);
     if ( !IsConnectionOK() )
     {
       return IO32_COMM_PROXY_ERROR_SEND;
     }
     nNumSent += dwNumJustSent;
 
-    unsigned long dwNumJustReceived = 0;
-    ReceiveData(pbyPinsOut + dwNumReceived, dwNumToRead - dwNumReceived, &dwNumJustReceived);
+    unsigned long dwNumJustReceived = ReceiveData(pbyPinsOut + dwNumReceived, dwNumToRead - dwNumReceived);
     if ( !IsConnectionOK() )
     {
       return IO32_COMM_PROXY_ERROR_RECEIVE;
@@ -97,27 +95,21 @@ bool CHAL_IO32_ICommProxy::IsConnectionOK() const
   return false;
 }
 
-void CHAL_IO32_ICommProxy::ReceiveData(unsigned char * pbyNewData, unsigned long dwNumMaxBytes, unsigned long * pdwNumBytesReceived)
+uint32_t CHAL_IO32_ICommProxy::ReceiveData(unsigned char * pbyNewData, uint32_t dwNumMaxBytes)
 {
-  if ( pdwNumBytesReceived )
-  {
-    *pdwNumBytesReceived = 0;
-  }
   if ( m_pCommDevice && dwNumMaxBytes )
   {
-    m_pCommDevice->Receive(pbyNewData, dwNumMaxBytes, pdwNumBytesReceived);
+    return m_pCommDevice->Receive(pbyNewData, dwNumMaxBytes);
   }
+  return 0;
 }
 
-void CHAL_IO32_ICommProxy::SendData(const unsigned char * pbyData, unsigned long dwNumBytes, unsigned long * pdwNumBytesSent)
+uint32_t CHAL_IO32_ICommProxy::SendData(const unsigned char * pbyData, uint32_t dwNumBytes)
 {
-  if ( pdwNumBytesSent )
-  {
-    *pdwNumBytesSent = 0;
-  }
   if ( m_pCommDevice && dwNumBytes )
   {
-    m_pCommDevice->Send(pbyData, dwNumBytes, pdwNumBytesSent);
+    return m_pCommDevice->Send(pbyData, dwNumBytes);
   }
+  return 0;
 }
 

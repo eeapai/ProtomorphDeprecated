@@ -257,29 +257,29 @@ void CWinSockWrapper::Disconnect()
   }
 }
 
-void CWinSockWrapper::ReceiveData(void *pDestination, unsigned long dwNumMaxBytes, unsigned long *pdwNumBytesReceived)
+uint32_t CWinSockWrapper::ReceiveData(void *pDestination, uint32_t dwNumMaxBytes)
 {
-  *pdwNumBytesReceived = 0;
+  uint32_t dwNumBytesReceived = 0;
   if ( INVALID_SOCKET == m_connectionSocket )
   {
     _LOG("No connection to receive data");
-    return;
+    return 0;
   }
   if ( !s_setSocketBlockingMode(m_connectionSocket, false) )
   {
     Disconnect();
-    return;
+    return 0;
   }
   int iResult = recv(m_connectionSocket, (char *)pDestination, dwNumMaxBytes, 0);
   if ( iResult > 0 )
   {
-    *pdwNumBytesReceived = iResult;
+    dwNumBytesReceived = iResult;
   }
   else if ( iResult == 0 )
   {
     _LOG("Other side disconnected");
     Disconnect(); // other side disconnected
-    return;
+    return 0;
   }
   else
   {
@@ -288,25 +288,23 @@ void CWinSockWrapper::ReceiveData(void *pDestination, unsigned long dwNumMaxByte
     {
       _LOG("recv call failed with WSA error: %d", iResult);
       Disconnect();
-      return;
+      return 0;
     }
     // no data received
   }
   if ( !s_setSocketBlockingMode(m_connectionSocket, true) )
   {
     Disconnect();
+    return 0;
   }
+  return dwNumBytesReceived;
 }
-void CWinSockWrapper::SendData(const void *pSource, unsigned long dwNumBytes, unsigned long *pdwNumBytesSent)
+uint32_t CWinSockWrapper::SendData(const void *pSource, uint32_t dwNumBytes)
 {
-  if (pdwNumBytesSent)
-  {
-    *pdwNumBytesSent = 0;
-  }
   if ( INVALID_SOCKET == m_connectionSocket )
   {
     _LOG("No connection to send data");
-    return;
+    return 0;
   }
   
   int nResult = send(m_connectionSocket, (char*)pSource, dwNumBytes, 0);
@@ -314,14 +312,10 @@ void CWinSockWrapper::SendData(const void *pSource, unsigned long dwNumBytes, un
   {
     _LOG("send call failed with WSA error: %d\n", WSAGetLastError());
     Disconnect();
+    return 0;
   }
-  else
-  {
-    if (pdwNumBytesSent)
-    {
-      *pdwNumBytesSent = nResult;
-    }
-  }
+
+  return nResult;
 }
 
 bool CWinSockWrapper::IsServerOK() const
@@ -380,12 +374,12 @@ void CWinSockWrapper::Connect(const char * pcszWhereTo)
   }
 }
 
-void CWinSockWrapper::Send(const void *pSource, unsigned long dwByteCount, unsigned long * pdwSentByteCount)
+uint32_t CWinSockWrapper::Send(const void *pSource, uint32_t dwByteCount)
 {
-  SendData(pSource, dwByteCount, pdwSentByteCount);
+  return SendData(pSource, dwByteCount);
 }
 
-void CWinSockWrapper::Receive(void *pDestination, unsigned long dwMaxByteCount, unsigned long * pdwHowManyBytes)
+uint32_t CWinSockWrapper::Receive(void *pDestination, uint32_t dwMaxByteCount)
 {
-  ReceiveData(pDestination, dwMaxByteCount, pdwHowManyBytes);
+  return ReceiveData(pDestination, dwMaxByteCount);
 }
