@@ -23,7 +23,7 @@
     <ProjectGuid>{DE6D6042-8A09-4A29-94FC-8DC96CAAF544}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>WinCommLib</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
