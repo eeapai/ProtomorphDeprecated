@@ -37,7 +37,16 @@ set ECLIPSE_LOCATION=%~1
 set EXTERNAL_TOOLS=%~2
 set EXTERNAL_LIBS=%~3
 
+set THIS_DRIVE=%~d0\
+
 echo [%ECLIPSE_BUILD%] Eclipse build started
+
+set JAVA_LOC=
+call :getjavaloc java.exe JAVA_LOC
+if [%JAVA_LOC%]==[""] (
+  echo [%ECLIPSE_INIT%] Java not found. Aborting.
+  exit /b -1
+)
 
 set BACKUP_ECLIPSE_LOCATION=%~d0\eclipse
 if [%ECLIPSE_LOCATION%]==[] (
@@ -56,12 +65,15 @@ if [%PROTOMORPH_APPS%]==[] (
 
 if [%EXTERNAL_TOOLS%]==[] (
   set EXTERNAL_TOOLS=%PROTOMORPH_APPS%
-  echo [%ECLIPSE_BUILD%] External tools location not provided
+  echo [%ECLIPSE_BUILD%] FYI, External tools location not provided
 )
 
-if exist %EXTERNAL_TOOLS% (
-  echo [%ECLIPSE_BUILD%] Using external tools from %EXTERNAL_TOOLS%
-) else (
+if [%EXTERNAL_TOOLS%]==[] (
+  set EXTERNAL_TOOLS=%THIS_DRIVE%zdev\appz\tools
+)
+echo [%ECLIPSE_BUILD%] Using external tools from %EXTERNAL_TOOLS%
+
+if not exist %EXTERNAL_TOOLS% (
   echo [%ECLIPSE_BUILD%] External tools not found. Aborting.
   exit /b -1
 )
@@ -76,11 +88,14 @@ if [%PROTOMORPH_EXTERNAL_LIBS%]==[] (
 )
 if [%EXTERNAL_LIBS%]==[] (
   set EXTERNAL_LIBS=%PROTOMORPH_EXTERNAL_LIBS%
-  echo [%ECLIPSE_BUILD%] External libs location not provided
+  echo [%ECLIPSE_BUILD%] FYI, External libs location not provided
 )
-if exist %EXTERNAL_LIBS% (
-  echo [%ECLIPSE_BUILD%] Using external libs from %EXTERNAL_LIBS%
-) else (
+if [%EXTERNAL_LIBS%]==[] (
+  set EXTERNAL_LIBS=%THIS_DRIVE%zdev\libz
+)
+echo [%ECLIPSE_BUILD%] Using external libs from %EXTERNAL_LIBS%
+
+if not exist %EXTERNAL_LIBS% (
   echo [%ECLIPSE_BUILD%] External libs not found. Aborting.
   exit /b -1
 )
@@ -108,6 +123,30 @@ echo version=1 >> %RES_FILE%
  :: For build variables
  :: \EclipseWS\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
 
+ :: echo [%ECLIPSE_BUILD%] Adding buid variables to %ECLIPSE_WS% (hack)
+ :: set BUILD_VARS_FILE=%ECLIPSE_WS%\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
+ :: echo [%ECLIPSE_BUILD%] %BUILD_VARS_FILE%
+ :: 
+ :: echo macros/workspace=^<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?^>>tempVars.xml
+ :: echo ^<macros^>>>tempVars.xml
+ :: 
+ :: if not [%ARM_XGCC_LOCATION%]==[] (
+ :: call :addBuildVar VALUE_PATH_DIR DEFAULT_ARM_XGCC %ARM_XGCC_LOCATION%
+ :: )
+ :: call :addBuildVar VALUE_PATH_DIR IO32STM32F103USB_CUBEF1_SDK %EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0
+ :: call :addBuildVar VALUE_TEXT IO32STM32F103USB_XGCC_PATH ${DEFAULT_MAKE_PATH};${DEFAULT_ARM_XGCC}
+ :: 
+ :: echo ^</macros^>>>tempVars.xml
+ :: call :appendBuildVarsToConf
+ :: 
+ :: if [%ARM_XGCC_LOCATION%]==[] (
+ :: echo [%ECLIPSE_BUILD%] Add build variable DEFAULT_ARM_XGCC to point to GCC ARM compiler
+ :: )
+ :: 
+ :: pause
+ :: del tempVars.xml
+ 
+ 
 echo [%ECLIPSE_BUILD%] Building projects
  :: Add -build <PROJECT>/<CONFIGURATION> line for each project
  :: Add -E <VAR NAME>=<VALUE> for all new variables needed by projects
@@ -154,8 +193,48 @@ GOTO:eof
   echo pathvariable.%_VAR_NAME%=%_LOCATION_FINAL%>> %_RES_FILE%
   goto:EOF
 
+:addBuildVar
+set _TYPE=%1
+set _NAME=%2
+set _VALUE=%3
+echo [%ECLIPSE_INIT%] %_NAME%: %_VALUE%
+if [%_TYPE%]==[VALUE_PATH_DIR] (
+  setlocal EnableDelayedExpansion
+  call :back2slash %_VALUE% _VALUE
+  call :escapeDriveSemicolon !_VALUE! _VALUE
+  echo ^<stringMacro name\="%_NAME%" type\="%_TYPE%" value\="!_VALUE!"/^>>> tempVars.xml
+  endlocal
+) else (
+echo ^<stringMacro name\="%_NAME%" type\="%_TYPE%" value\="%_VALUE%"/^>>> tempVars.xml
+)
+GOTO:eof
+
+:appendBuildVarsToConf
+for /f "tokens=*" %%a in ('find /n /v "" ^< "tempVars.xml"') do ( 
+    set line=%%a
+    SetLocal EnableDelayedExpansion
+    set line=!line:*]=!\n\r
+    set /p =!line!<nul
+    EndLocal
+)>>%BUILD_VARS_FILE%
+GOTO:eof
+
 :normalizePath
   set %2=%~f1
+  goto:EOF
+
+:back2slash
+  set _WITH_BACKSLASHES=%1
+  set %2=%_WITH_BACKSLASHES:\=/%  
+  goto:EOF
+
+:escapeDriveSemicolon
+  set _UNESCAPED=%1
+  set %2=%_UNESCAPED:~0,1%\:%_UNESCAPED:~2%
+  goto:EOF
+
+:getjavaloc
+  set %2="%~$PATH:1"
   goto:EOF
 
 :printUsage
