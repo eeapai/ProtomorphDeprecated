@@ -76,6 +76,10 @@ CWinSockWrapper::CWinSockWrapper()
 CWinSockWrapper::~CWinSockWrapper()
 {
   Disconnect();
+  if (IsServerOK())
+  {
+    StopListening();
+  }
 }
 void CWinSockWrapper::StartListening(unsigned short wPort)
 {
