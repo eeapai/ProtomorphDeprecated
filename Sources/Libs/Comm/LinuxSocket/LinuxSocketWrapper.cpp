@@ -116,14 +116,14 @@ void CLinuxSocketWrapper::AcceptNewConnection(unsigned long dwTimeout_ms /*= 100
   {
     return;
   }
-
+  int nTimeout_ms = (int)dwTimeout_ms;  // #TODO_Types
   struct pollfd fd2poll;
   if ( dwTimeout_ms )
   {
     fd2poll.fd = m_listenSocket;
     fd2poll.events = POLLIN | POLLPRI | POLLRDHUP;
     fd2poll.revents = 0;
-    poll(&fd2poll, 1, dwTimeout_ms);
+    poll(&fd2poll, 1, nTimeout_ms);
   }
 
   sockaddr_in clientSockAddress = {0};
@@ -212,20 +212,24 @@ uint32_t CLinuxSocketWrapper::ReceiveData(void *pDestination, uint32_t dwNumMaxB
   //int nByteCountAvailable;
   //ioctl(m_connectionSocket, FIONREAD, &nByteCountAvailable);
 
-  if ( dwTimeout_ms )
+  int nTimeout_ms = (int)dwTimeout_ms;  // #TODO_Types
+
+  if ( nTimeout_ms )
   {
     struct pollfd fd2poll;
     fd2poll.fd = m_connectionSocket;
     fd2poll.events = POLLIN | POLLPRI | POLLRDHUP;
     fd2poll.revents = 0;
-    poll(&fd2poll, 1, dwTimeout_ms);
+    poll(&fd2poll, 1, nTimeout_ms);
   }
-  int iResult = recv(m_connectionSocket, (char *)pDestination, dwNumMaxBytes, MSG_DONTWAIT);
-  if ( iResult > 0 )
+
+  int nNumMaxBytes = (int)dwNumMaxBytes;  // #TODO_Types
+  ssize_t nResult = recv(m_connectionSocket, (char *)pDestination, nNumMaxBytes, MSG_DONTWAIT);
+  if ( nResult > 0 )
   {
-    return iResult;
+    return (uint32_t)nResult;
   }
-  else if ( iResult == 0 )
+  else if ( nResult == 0 )
   {
     _LOG("Other side disconnected");
     DisconnectClient(); // other side disconnected
@@ -259,15 +263,16 @@ uint32_t CLinuxSocketWrapper::SendData(const void *pSource, uint32_t dwNumBytes)
     _LOG("No connection to send data");
     return 0;
   }
-  
-  int nResult = send(m_connectionSocket, (char*)pSource, dwNumBytes, 0);
+
+  int nNumBytes = (int)dwNumBytes;  // #TODO_Types
+  ssize_t nResult = send(m_connectionSocket, (char*)pSource, nNumBytes, 0);
   if ( nResult < 0 )
   {
     _LOG("ERROR from recv call with errno %d", getErrno());
     DisconnectClient();
     return 0;
   }
-  return nResult;
+  return static_cast<uint32_t>(nResult);
 }
 
 bool CLinuxSocketWrapper::IsServerOK() const
@@ -277,6 +282,7 @@ bool CLinuxSocketWrapper::IsServerOK() const
 
 bool CLinuxSocketWrapper::IsClientOK() const
 {
+  // #TODO_SOCKET check if still connected. Not a problem if communicate periodically.
   return INVALID_SOCKET != m_connectionSocket;
 }
 

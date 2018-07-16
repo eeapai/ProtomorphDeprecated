@@ -184,7 +184,7 @@ void CWinSockWrapper::StopListening()
     m_listenSocket = INVALID_SOCKET;
   }
 }
-void CWinSockWrapper::AcceptNewConnection()
+void CWinSockWrapper::AcceptNewConnection() // #TODO_BLOCKING_ACCEPT maybe not with select but with listen thread
 {
   if ( INVALID_SOCKET == m_listenSocket)
   {
@@ -203,6 +203,10 @@ void CWinSockWrapper::AcceptNewConnection()
     {
       _LOG("Nonblocking accept call failed with WSA error: %d\n", nError);
       StopListening();
+    }
+    else
+    {
+      Sleep(10); // #TODO_BLOCKING_ACCEPT remove
     }
   }
   else
