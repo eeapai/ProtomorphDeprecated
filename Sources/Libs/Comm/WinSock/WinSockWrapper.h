@@ -34,6 +34,8 @@
 
 #include <winsock2.h>
 #include "ICommDevice.h"
+#include <string>
+#include <vector>
 
 class CWinSockWrapper : public ICommDevice
 {
@@ -58,9 +60,6 @@ public:
   void Connect(const char *pcszDestination, unsigned short wPort);
   void Disconnect();
 
-  uint32_t ReceiveData(void *pDestination, uint32_t dwNumMaxBytes);
-  uint32_t SendData(const void *pSource, uint32_t dwNumBytes);
-
   bool IsServerOK() const;
   bool IsClientOK() const;
 
@@ -76,4 +75,76 @@ private:
   SOCKET m_connectionSocket = INVALID_SOCKET;
 };
 
+
+class CWinSockMulticastWrapper : public ICommDevice
+{
+public:
+  CWinSockMulticastWrapper();
+  ~CWinSockMulticastWrapper();
+
+  void SetLocalIPv4Bind(const char *pcszIP);
+  void GetIPv4Source(uint8_t * pbyIP) const; // Gets meaningful data after Receive returns positive value
+
+public:
+  // Inherited via ICommDevice
+  void Connect(const char * pcszWhereTo = "") override;
+  int GetStatus() const override;
+  uint32_t Send(const void * pSource, uint32_t dwByteCount) override;
+  uint32_t Receive(void * pDestination, uint32_t dwMaxByteCount) override;
+  void Disconnect() override;
+
+private:
+  void prepareForReception();
+  bool isReceptionOK() const;
+  bool isClientOK() const;
+
+private:
+  std::string m_strBindIP;  // Set in optional SetLocalIPv4Bindcall. INADDR_ANY will be used if SetLocalBind not called.
+
+  std::string m_strGroup;   // Multicast group IP to receive from and send to.
+  uint16_t m_wPort;         // Multicat port;
+
+  SOCKET m_listenSocket = INVALID_SOCKET;
+  struct sockaddr_in m_receiveAddr; // Valid after Receive returns positive value
+
+  SOCKET m_transmitSocket = INVALID_SOCKET;
+
+};
+
+class CWinNetHelpers
+{
+public:
+  struct SHostAdapter
+  {
+    uint32_t m_dwIfIndex = 0;
+    std::string m_strPermanentAdapterName;
+    std::wstring m_strFriendlyAdapterName;
+    std::vector<std::string> m_vstrUnicastIPv4Addresses;
+    std::vector<std::string> m_vstrUnicastIPv6Addresses;
+    std::string m_strPhysicalAddress;
+    union {
+      uint32_t m_dwFlags = 0;
+      struct {
+        ULONG DdnsEnabled : 1;
+        ULONG RegisterAdapterSuffix : 1;
+        ULONG Dhcpv4Enabled : 1;
+        ULONG ReceiveOnly : 1;
+        ULONG NoMulticast : 1;
+        ULONG Ipv6OtherStatefulConfig : 1;
+        ULONG NetbiosOverTcpipEnabled : 1;
+        ULONG Ipv4Enabled : 1;
+        ULONG Ipv6Enabled : 1;
+        ULONG Ipv6ManagedAddressConfigurationSupported : 1;
+      };
+    };
+    uint32_t m_dwIfType = 0;
+    uint32_t m_dwOperStatus = 0;
+
+    bool IsEthernetNetworkInterface() const;
+    bool IsWirelessNetworkInterface() const;
+    bool IsUp() const;
+  };
+
+  static void HostAdaptersList(uint32_t dwFlags, std::vector<SHostAdapter> &rvHostAdapters);
+};
 #endif
