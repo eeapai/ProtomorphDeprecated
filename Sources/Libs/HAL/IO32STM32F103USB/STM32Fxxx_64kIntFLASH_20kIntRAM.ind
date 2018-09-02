@@ -108,4 +108,6 @@ SECTIONS
   
 }
 
+USED_ROM = 100 * (SIZEOF(.text_out) + SIZEOF(.rodata_out) + SIZEOF(.data_out)) / LENGTH(ROM);
+
 
