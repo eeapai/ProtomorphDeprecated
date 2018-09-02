@@ -81,6 +81,8 @@ public:
   afx_msg LRESULT OnKickIdle(WPARAM wParam, LPARAM lParam);
 
 private:
+  EWinCommType getCommType() const;
+
   void enumerateDevices();
   void doOneWinCommEchoTest();
 
@@ -88,9 +90,16 @@ private:
   void disconnect();
 private:
   BOOL m_bRunning = FALSE;
+  enum EDeviceType
+  {
+    devtypWinUSB,
+    devtypWinSock,
+  };
+  int m_nDeviceType = devtypWinUSB;
   CString m_strDeviceName;
+  CComboBox	m_wndDeviceType;
   CComboBox	m_wndDeviceName;
-  
+
   DWORD m_dwAvailablePacketSize = 0;
   BYTE *m_pbyTestBuffer = nullptr;
 

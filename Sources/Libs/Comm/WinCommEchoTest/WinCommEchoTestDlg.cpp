@@ -100,7 +100,9 @@ CWinCommEchoTestDlg::~CWinCommEchoTestDlg()
 void CWinCommEchoTestDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
+  DDX_Control(pDX, IDC_COMBO_TYPE, m_wndDeviceType);
   DDX_Control(pDX, IDC_COMBO_NAME, m_wndDeviceName);
+  DDX_CBIndex(pDX, IDC_COMBO_TYPE, m_nDeviceType);
   DDX_CBString(pDX, IDC_COMBO_NAME, m_strDeviceName);
   DDX_Check(pDX, IDC_CHECK1, m_sTestConfiguration.m_bRunContiniously);
 
@@ -142,6 +144,8 @@ END_MESSAGE_MAP()
 
 BOOL CWinCommEchoTestDlg::OnInitDialog()
 {
+  USES_CONVERSION;
+
 	CDialogEx::OnInitDialog();
   
 	// Add "About..." menu item to system menu.
@@ -169,6 +173,9 @@ BOOL CWinCommEchoTestDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
+  m_wndDeviceType.AddString(A2CT("WinUSB"));
+  m_wndDeviceType.AddString(A2CT("WinSock"));
+
 	// TODO: Add extra initialization here
   enumerateDevices();
   UpdateData(FALSE);
@@ -177,12 +184,28 @@ BOOL CWinCommEchoTestDlg::OnInitDialog()
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
+EWinCommType CWinCommEchoTestDlg::getCommType() const
+{
+  EWinCommType eComm = EWinCommType::WinUSBDevice;
+  switch ( m_nDeviceType )
+  {
+  case devtypWinUSB: eComm = EWinCommType::WinUSBDevice; break;
+  case devtypWinSock: eComm = EWinCommType::WinSockWrapper; break;
+  default:
+    break;
+  }
+  return eComm;
+}
+
 void CWinCommEchoTestDlg::enumerateDevices()
 {
   USES_CONVERSION;
+
+  EWinCommType eComm = getCommType();
+
   char achDevice[1024] = { 0 };
   std::vector<std::string> devs;
-  while ( 0 < CWinCommDevice::ListConnection(EWinCommType::WinUSBDevice, (int)devs.size(), achDevice, sizeof(achDevice) -1) )
+  while ( 0 < CWinCommDevice::ListConnection(eComm, (int)devs.size(), achDevice, sizeof(achDevice) -1) )
   {
     std::string strDev = achDevice;
     devs.push_back(strDev);
@@ -369,7 +392,7 @@ void CWinCommEchoTestDlg::OnBnClickedDoTest()
 
 void CWinCommEchoTestDlg::connect()
 {
-  m_commDevice.SetType(EWinCommType::WinUSBDevice);
+  m_commDevice.SetType(getCommType());
   CT2A deviceName(m_strDeviceName, CP_UTF8);
   m_commDevice.Connect(deviceName.m_psz);
 }
