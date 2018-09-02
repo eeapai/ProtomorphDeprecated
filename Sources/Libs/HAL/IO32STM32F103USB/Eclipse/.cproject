@@ -249,7 +249,7 @@
 				</extensions>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
-				<configuration artifactExtension="out" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.debug.607934766.276244470" name="DebugBluePill" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=" parent="cdt.managedbuild.config.gnu.cross.exe.debug" postannouncebuildStep="Dump size" postbuildStep="arm-none-eabi-size.exe --format=berkley ${PWD}/${BuildArtifactFileName}" preannouncebuildStep="" prebuildStep="">
+				<configuration artifactExtension="out" artifactName="${ProjName}" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="cdt.managedbuild.config.gnu.cross.exe.debug.607934766.276244470" name="DebugBluePill" optionalBuildProperties="org.eclipse.cdt.docker.launcher.containerbuild.property.selectedvolumes=,org.eclipse.cdt.docker.launcher.containerbuild.property.volumes=" parent="cdt.managedbuild.config.gnu.cross.exe.debug" postannouncebuildStep="Dump size" postbuildStep="arm-none-eabi-size.exe --format=berkley ${PWD}/${BuildArtifactFileName}" preannouncebuildStep="" prebuildStep="">
 					<folderInfo id="cdt.managedbuild.config.gnu.cross.exe.debug.607934766.276244470." name="/" resourcePath="">
 						<toolChain id="cdt.managedbuild.toolchain.gnu.cross.exe.debug.713980920" name="Cross GCC" superClass="cdt.managedbuild.toolchain.gnu.cross.exe.debug">
 							<option id="cdt.managedbuild.option.gnu.cross.prefix.1244322149" name="Prefix" superClass="cdt.managedbuild.option.gnu.cross.prefix" useByScannerDiscovery="false" value="arm-none-eabi-" valueType="string"/>
@@ -271,11 +271,11 @@
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.c.compiler.option.include.paths.1373305300" name="Include paths (-I)" superClass="gnu.c.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/STM32F1xx_HAL_Driver/Inc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/CMSIS/Device/ST/STM32F1xx/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/CMSIS/Device/ST/STM32F1xx&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/STM32F1xx_HAL_Driver/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../Comm/Common&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../Comm/WinUSB&quot;"/>
 								</option>
@@ -299,10 +299,10 @@
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="gnu.cpp.compiler.option.include.paths.878886331" name="Include paths (-I)" superClass="gnu.cpp.compiler.option.include.paths" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/STM32F1xx_HAL_Driver/Inc&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/CMSIS/Device/ST/STM32F1xx/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Drivers/CMSIS/Include&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/STM32F1xx_HAL_Driver/Inc&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/CMSIS/Device/ST/STM32F1xx/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Drivers/CMSIS/Include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${IO32STM32F103USB_CUBEF1_SDK_PATH}/Middlewares/ST/STM32_USB_Device_Library/Core/Inc&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../Comm/Common&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${ProjDirPath}/../../../Comm/WinUSB&quot;"/>
 								</option>

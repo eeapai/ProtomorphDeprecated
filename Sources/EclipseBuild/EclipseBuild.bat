@@ -39,6 +39,7 @@ set EXTERNAL_LIBS=%~3
 
 set THIS_DRIVE=%~d0\
 
+  :: ##############################################
 echo [%ECLIPSE_BUILD%] Eclipse build started
 
 set JAVA_LOC=
@@ -78,8 +79,8 @@ if not exist %EXTERNAL_TOOLS% (
   exit /b -1
 )
 
-set DEFAULT_ARM_XGCC=%EXTERNAL_TOOLS%\tools\gcc-arm-none-eabi-7-2017-q4-major-win32\bin
-call :normalizePath %DEFAULT_ARM_XGCC% DEFAULT_ARM_XGCC
+set DEFAULT_ARM_XGCC_PATH=%EXTERNAL_TOOLS%\tools\gcc-arm-none-eabi-7-2017-q4-major-win32\bin
+call :normalizePath %DEFAULT_ARM_XGCC_PATH% DEFAULT_ARM_XGCC_PATH
 set DEFAULT_MAKE_PATH=%EXTERNAL_TOOLS%\tools\msys\1.0\bin
 call :normalizePath %DEFAULT_MAKE_PATH% DEFAULT_MAKE_PATH
  
@@ -91,7 +92,7 @@ if [%EXTERNAL_LIBS%]==[] (
   echo [%ECLIPSE_BUILD%] FYI, External libs location not provided
 )
 if [%EXTERNAL_LIBS%]==[] (
-  set EXTERNAL_LIBS=%THIS_DRIVE%zdev\libz
+  set EXTERNAL_LIBS=%THIS_DRIVE%zdev/libz
 )
 echo [%ECLIPSE_BUILD%] Using external libs from %EXTERNAL_LIBS%
 
@@ -104,6 +105,7 @@ call :normalizePath %ECLIPSE_WS% ECLIPSE_WS
 
 echo [%ECLIPSE_BUILD%] Eclipse workspace used for build: %ECLIPSE_WS%
 
+  :: ##############################################
 echo [%ECLIPSE_BUILD%] Importing projects
   :: Add eclipse projects below. Project can be imported multiple times ATM.
   :: If this changes the list of imported projects can be checked as list of sub folders in 
@@ -112,55 +114,74 @@ echo [%ECLIPSE_BUILD%] Importing projects
   :: so it can be checked.
 call :importProject %~dp0..\Libs\HAL\IO32STM32F103USB\Eclipse
 
+  :: ##############################################
 echo [%ECLIPSE_BUILD%] Specifying variables for linked resources to %ECLIPSE_WS% (hack)
+  :: Add linked paths for linked resources (files - usually in virtual folders)
 set RES_FILE=%ECLIPSE_WS%\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.core.resources.prefs
+  :: File is recreated on each run (need to be careful when changing Eclipse version) 
 echo [%ECLIPSE_BUILD%] %RES_FILE%
-echo eclipse.preferences.version=1 > %RES_FILE%
+echo eclipse.preferences.version=1> %RES_FILE%
   :: echo each linked resorce location variable to RES_FILE
-call :addResourceLocationVar %RES_FILE% IO32STM32F103USB_CUBEF1_LOC %EXTERNAL_LIBS%\ST\STM32Cube_FW_F1_V1.6.0
-echo version=1 >> %RES_FILE%
+call :addResourceLocationVar %RES_FILE% IO32STM32F103USB_CUBEF1_LOC %EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0
+echo version=1>> %RES_FILE%
 
- :: For build variables
- :: \EclipseWS\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
+  :: ##############################################
+  :: \EclipseWS\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
+echo [%ECLIPSE_BUILD%] Adding buid variables to %ECLIPSE_WS% (hack)
+set BUILD_VARS_FILE=%ECLIPSE_WS%\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
+  :: File is recreated on each run (need to be careful when changing Eclipse version and adding new vars) 
+echo [%ECLIPSE_BUILD%] %BUILD_VARS_FILE%
 
- :: echo [%ECLIPSE_BUILD%] Adding buid variables to %ECLIPSE_WS% (hack)
- :: set BUILD_VARS_FILE=%ECLIPSE_WS%\.metadata\.plugins\org.eclipse.core.runtime\.settings\org.eclipse.cdt.core.prefs
- :: echo [%ECLIPSE_BUILD%] %BUILD_VARS_FILE%
- :: 
- :: echo macros/workspace=^<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?^>>tempVars.xml
- :: echo ^<macros^>>>tempVars.xml
- :: 
- :: if not [%ARM_XGCC_LOCATION%]==[] (
- :: call :addBuildVar VALUE_PATH_DIR DEFAULT_ARM_XGCC %ARM_XGCC_LOCATION%
- :: )
- :: call :addBuildVar VALUE_PATH_DIR IO32STM32F103USB_CUBEF1_SDK %EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0
- :: call :addBuildVar VALUE_TEXT IO32STM32F103USB_XGCC_PATH ${DEFAULT_MAKE_PATH};${DEFAULT_ARM_XGCC}
- :: 
- :: echo ^</macros^>>>tempVars.xml
- :: call :appendBuildVarsToConf
- :: 
- :: if [%ARM_XGCC_LOCATION%]==[] (
- :: echo [%ECLIPSE_BUILD%] Add build variable DEFAULT_ARM_XGCC to point to GCC ARM compiler
- :: )
- :: 
- :: pause
- :: del tempVars.xml
- 
- 
+echo build.all.configs.enabled=false> %BUILD_VARS_FILE%
+echo eclipse.preferences.version=1 >> %BUILD_VARS_FILE%
+
+echo macros/workspace=^<?xml version\="1.0" encoding\="UTF-8" standalone\="no"?^>>tempVars.xml
+echo ^<macros^>>>tempVars.xml
+
+if not [%DEFAULT_ARM_XGCC_PATH%]==[] (
+call :addBuildVar VALUE_PATH_DIR DEFAULT_ARM_XGCC_PATH %DEFAULT_ARM_XGCC_PATH%
+)
+if not [%DEFAULT_MAKE_PATH%]==[] (
+call :addBuildVar VALUE_PATH_DIR DEFAULT_MAKE_PATH %DEFAULT_MAKE_PATH%
+)
+
+call :addBuildVar VALUE_PATH_DIR IO32STM32F103USB_CUBEF1_SDK_PATH %EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0
+call :addBuildVar VALUE_TEXT IO32STM32F103USB_XGCC_PATH "${DEFAULT_MAKE_PATH};${DEFAULT_ARM_XGCC_PATH}"
+
+echo ^</macros^>>>tempVars.xml
+call :appendBuildVarsToConf
+
+if [%DEFAULT_MAKE_PATH%]==[] (
+echo [%ECLIPSE_BUILD%] Add build variable DEFAULT_MAKE_PATH to point to make
+)
+
+if [%DEFAULT_ARM_XGCC_PATH%]==[] (
+echo [%ECLIPSE_BUILD%] Add build variable DEFAULT_ARM_XGCC_PATH to point to GCC ARM compiler
+)
+
+  :: ##############################################
 echo [%ECLIPSE_BUILD%] Building projects
  :: Add -build <PROJECT>/<CONFIGURATION> line for each project
- :: Add -E <VAR NAME>=<VALUE> for all new variables needed by projects
+ :: Add -E <VAR NAME>=<VALUE> for all new variables needed by projects [obsolete]
+
+  :: Modify PATH temorarly to workaround indexer problem 
 setlocal
-set PATH=%PATH%;%DEFAULT_ARM_XGCC%
+set PATH=%PATH%;%DEFAULT_ARM_XGCC_PATH%
+ ::
+ :: call :back2slash %DEFAULT_MAKE_PATH% DEFAULT_MAKE_PATH
+ :: call :back2slash %DEFAULT_ARM_XGCC_PATH% DEFAULT_ARM_XGCC_PATH
+ :: call :back2slash %EXTERNAL_LIBS% EXTERNAL_LIBS
+ ::
+ :: -E DEFAULT_MAKE_PATH=%DEFAULT_MAKE_PATH% ^
+ :: -E DEFAULT_ARM_XGCC_PATH=%DEFAULT_ARM_XGCC_PATH% ^
+ :: -E IO32STM32F103USB_XGCC_PATH=${DEFAULT_MAKE_PATH};${DEFAULT_ARM_XGCC_PATH} ^
+ :: -E IO32STM32F103USB_CUBEF1_SDK_PATH=%EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0 ^
+
 
 %ECLIPSE_LOCATION%\eclipsec.exe ^
 -nosplash ^
 -application org.eclipse.cdt.managedbuilder.core.headlessbuild ^
 -data %ECLIPSE_WS% ^
--E DEFAULT_MAKE_PATH=%DEFAULT_MAKE_PATH% ^
--E DEFAULT_ARM_XGCC=%DEFAULT_ARM_XGCC% ^
--E IO32STM32F103USB_XGCC_PATH=${DEFAULT_MAKE_PATH};${DEFAULT_ARM_XGCC} ^
--E IO32STM32F103USB_CUBEF1_SDK=%EXTERNAL_LIBS%/ST/STM32Cube_FW_F1_V1.6.0 ^
 -build IO32STM32F103USB/DebugBluePill ^
 -printErrorMarkers ^
 --launcher.ini %ECLIPSE_LOCATION%eclipse.ini ^
@@ -170,9 +191,10 @@ endlocal
 
 GOTO:eof
 
+  :: ##############################################
 :importProject
   set _PROJECT_TO_IMPORT=%~f1
-  echo [%ECLIPSE_BUILD%] Importing %_PROJECT_TO_IMPORT%
+  echo [%ECLIPSE_BUILD%]   %_PROJECT_TO_IMPORT%
   %ECLIPSE_LOCATION%\eclipsec.exe ^
   -nosplash ^
   -application org.eclipse.cdt.managedbuilder.core.headlessbuild ^
@@ -190,6 +212,7 @@ GOTO:eof
   set _LOCATION=%~f3
   set _LOCATION_SLASHES=%_LOCATION:\=/%
   set _LOCATION_FINAL=%_LOCATION_SLASHES:~0,1%\:%_LOCATION_SLASHES:~2%
+  echo [%ECLIPSE_BUILD%]   %_VAR_NAME%: %_LOCATION%
   echo pathvariable.%_VAR_NAME%=%_LOCATION_FINAL%>> %_RES_FILE%
   goto:EOF
 
@@ -197,15 +220,17 @@ GOTO:eof
 set _TYPE=%1
 set _NAME=%2
 set _VALUE=%3
-echo [%ECLIPSE_INIT%] %_NAME%: %_VALUE%
 if [%_TYPE%]==[VALUE_PATH_DIR] (
   setlocal EnableDelayedExpansion
-  call :back2slash %_VALUE% _VALUE
+  call :back2slash !_VALUE! _VALUE
+  echo [%ECLIPSE_BUILD%]   %_NAME%: !_VALUE!
   call :escapeDriveSemicolon !_VALUE! _VALUE
   echo ^<stringMacro name\="%_NAME%" type\="%_TYPE%" value\="!_VALUE!"/^>>> tempVars.xml
   endlocal
 ) else (
-echo ^<stringMacro name\="%_NAME%" type\="%_TYPE%" value\="%_VALUE%"/^>>> tempVars.xml
+  :: Always with double qoutes
+echo [%ECLIPSE_BUILD%]   %_NAME%: %_VALUE:~1,-1%
+echo ^<stringMacro name\="%_NAME%" type\="%_TYPE%" value\="%_VALUE:~1,-1%"/^>>> tempVars.xml
 )
 GOTO:eof
 
@@ -225,7 +250,8 @@ GOTO:eof
 
 :back2slash
   set _WITH_BACKSLASHES=%1
-  set %2=%_WITH_BACKSLASHES:\=/%  
+  set _WITH_SLASHES=%_WITH_BACKSLASHES:\=/%
+  set %2=%_WITH_SLASHES%  
   goto:EOF
 
 :escapeDriveSemicolon
