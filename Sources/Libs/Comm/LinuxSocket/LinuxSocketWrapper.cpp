@@ -320,7 +320,13 @@ void CLinuxSocketWrapper::Connect(const char * pcszWhereTo)
       strAddress = strPort.substr(0, pos);
       strPort = strPort.substr(++pos);
     }
-    unsigned short wPort = (unsigned short)std::stoi(strPort);
+    
+    bool bOnlyDigitsInPortStr = strspn(strPort.c_str(), "0123456789") == strPort.size();
+    if ( !bOnlyDigitsInPortStr )
+    {
+      return;
+    }
+    uint16_t wPort = (unsigned short)std::stoi(strPort);
 
     if ( strAddress.size() )
     {

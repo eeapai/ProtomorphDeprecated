@@ -35,6 +35,7 @@
 #include <cstdio>
 #include <poll.h>
 #include <unistd.h>
+#include <stdlib.h>     /* strtol */
 
 extern void DoTest(); // unused 
 
@@ -53,17 +54,82 @@ static const char *sc_apHostStates[] =
   "IO Cycle Done"
 };
 
-int main(void)
+void printUsage(const char *pcszError = nullptr)
 {
+  if ( pcszError )
+  {
+    printf(pcszError);
+  }
+  printf(
+    "\n"
+    "IO32RaspberryPiHost [-p<port>] [-m<mask>]\n"
+    "\n"
+    "  port - TCP/IP listening port\n"
+    "         defualt: 1032\n"
+    "  mask - allowed pin mask in HEX\n"
+    "         mustn't be 0\n"
+    "         pin is allowed if bit in the mask at it's position is set\n"
+    "           0x00000001 pin0 is allowed\n"
+    "           0x00000081 pin7 and pin0 are allowed\n"
+    "           0xFFFFFFFF all pins are allowed\n"
+    "         default: 0x0FFFFFFC\n"
+    "\n"
+    "  example: IO32RaspberryPiHost -p1032 -m0x0FFFFFFC\n"
+  );
+}
+
+static bool s_anythingOnStdIn()
+{
+  struct pollfd fd2poll;
+  fd2poll.fd = STDIN_FILENO;
+  fd2poll.events = POLLIN;
+  fd2poll.revents = 0;
+  return  0 < poll(&fd2poll, 1, 0);
+}
+
+int main(int argc, char **argv)
+{
+  const char *pcszPort = "1032";
+  const char *pcszMask = "0x0FFFFFFC";
+
+  for ( int nArg = 1; nArg < argc; ++nArg )
+  {
+    const char *pcszArg = argv[nArg];
+    if ( '-' != pcszArg[0] )
+    {
+      printf("Bad argument start\n%s\n", pcszArg);
+      printUsage();
+      return -1;
+    }
+    switch ( pcszArg[1] )
+    {
+    case 'p': pcszPort = &pcszArg[2]; break;
+    case 'm': pcszMask = &pcszArg[2]; break;
+    default:
+      printf("Bad argument \n%s\n", pcszArg);
+      printUsage();
+      return -1;
+    }
+  }
+
+  uint32_t dwMask = strtol(pcszMask, nullptr, 16);
+  if ( !dwMask )
+  {
+    printUsage("bad mask");
+    return -1;
+  }
+  printf("IO32 host set to listen on port %s; served pin mask 0x%08X\n", pcszPort, dwMask);
+
   printf("Initializing GPIO\n");
   CHAL_IO32_LinuxImpl io32(0x0FFFFFFC);
   io32.Initialize();
   printf("Starting IO32 Linux host\n");
-  printf("Press ENTER to exit\n");
 
   CLinuxSocketWrapper server;
   unsigned char abyPinBuff[1024];
-  CHAL_IO32_ICommHost io32Host(&io32, abyPinBuff, sizeof(abyPinBuff), &server, "1032");
+  CHAL_IO32_ICommHost io32Host(&io32, abyPinBuff, sizeof(abyPinBuff), &server, pcszPort);
+
+  printf("Press ENTER to exit\n");
 
   bool bRun = true;
   int nHostState = -1;
@@ -77,6 +143,8 @@ int main(void)
       case CHAL_IO32_ICommHost::io32hostWaitingDataFromClient:
       case CHAL_IO32_ICommHost::io32hostIOCycleDone:
         break;
+      case CHAL_IO32_ICommHost::io32hostErrorStartingServer:
+        bRun = false; // fall through
       default:
         printf(sc_apHostStates[nNewHostState]);
         printf("\n");
@@ -85,18 +153,17 @@ int main(void)
     }
     nHostState = nNewHostState;
     // See if anything on stdin
-    struct pollfd fd2poll;
-    fd2poll.fd = STDIN_FILENO;
-    fd2poll.events = POLLIN;
-    fd2poll.revents = 0;
-    if ( 0 < poll(&fd2poll, 1, 0) )
+    if ( s_anythingOnStdIn() )
     {
       bRun = false;
     }
   }
   
-  int c;
-  while ( (c = getchar()) != '\n' && c != EOF ); // flush stdin 
+  if ( s_anythingOnStdIn() )
+  {
+    int c;
+    while ( (c = getchar()) != '\n' && c != EOF ); // flush stdin
+  }
   
   printf("Exiting\n");
 
