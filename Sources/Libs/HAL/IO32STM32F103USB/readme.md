@@ -6,4 +6,4 @@ Other implemntations are available, e.g. on [RapberyPi](../IO32RaspberryPiHost) 
 
 Build settings are configured as Eclipse CDT Automake project in Eclipse subfolder.
 
-Sources are combined in Eclipse project virtual folders from here, [HAL](..) and [Comm](../Comm).
+Sources are combined in Eclipse project virtual folders from here, [HAL](..) and [Comm](../../Comm).
